@@ -47,29 +47,17 @@ lançamentos <- banco %>%
   summarise(freq = n()) %>%
   mutate(freq_relativa = round(freq / sum(freq) * 100, 1))
 
-porcentagens <- paste(lançamentos$freq_relativa, "%")
-legendas <- paste(lançamentos$freq, " (", porcentagens, ")")
+lançamentos <- lançamentos %>%
+  rename(Formato = format)
 
-lançamentos$Década <- as.character(lançamentos$Década)
-
+lançamentos <- lançamentos %>%
+  mutate(Formato = recode(Formato,
+                          "Movie" = "Filme"))
 
 ggplot(lançamentos) +
-  aes(
-    x = fct_reorder(Década, freq, .desc = TRUE), 
-    y = freq,
-    fill = format, 
-    label = porcentagens
-  ) +
-  geom_col(position = "dodge") +
-  geom_text(
-    position = position_dodge(width = 0.9),
-    vjust = -0.3, hjust = 0.3,
-    size = 3
-  ) +
-  labs(
-    x = "Décadas",
-    y = "Frequência de Lançamentos",
-    fill = "Formato de Lançamento"
-  ) +
+  aes(x = Década, y = freq, group = Formato, colour = Formato) +
+  geom_line(size = 1) +
+  geom_point(size = 2) +
+  labs(x = "Década", y = "Número de lançamentos") +
   theme_estat()
-ggsave("colunas-bi-freq.pdf", width = 158, height = 93, units = "mm")
+ggsave("series_grupo.pdf", width = 158, height = 93, units = "mm")
