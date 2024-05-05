@@ -81,5 +81,7 @@ ggplot(a2) +
   ) +
   labs(x = "Temporada", y = "imdb") +
   theme_estat()
+ggsave("box_bi.pdf", width = 158, height = 93, units = "mm")
+
 
 
