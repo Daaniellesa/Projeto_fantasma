@@ -58,7 +58,7 @@ ggplot(lançamentos) +
   aes(x = Década, y = freq, group = Formato, colour = Formato) +
   geom_line(size = 1) +
   geom_point(size = 2) +
-  labs(x = "Década", y = "Número de lançamentos") +
+  labs(x = "Década", y = "Frequência") +
   theme_estat()
 ggsave("series_grupo.pdf", width = 158, height = 93, units = "mm")
 
@@ -72,6 +72,19 @@ a2 <- subset(banco, season != 'Movie')
 a2 <- subset(a2, season != 'Special')
 a2 <- subset(a2, season != 'Crossover')
 
+
+medidas_resumo <- a2 %>%
+  group_by(season) %>%
+  summarise(
+    Media = mean(imdb),
+    Desvio_Padrao = sd(imdb),
+    Mediana = median(imdb),
+    Q1 = quantile(imdb, probs = 0.25),
+    Q3 = quantile(imdb, probs = 0.75),
+    Minimo = min(imdb),
+    Maximo = max(imdb)
+  ) %>%
+  ungroup() 
 
 ggplot(a2) +
   aes(x = reorder(season, imdb, FUN = median), y = imdb) +
