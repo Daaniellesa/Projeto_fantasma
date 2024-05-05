@@ -61,3 +61,25 @@ ggplot(lançamentos) +
   labs(x = "Década", y = "Número de lançamentos") +
   theme_estat()
 ggsave("series_grupo.pdf", width = 158, height = 93, units = "mm")
+
+
+                 ###Análise 2###
+
+
+# Análise 2:Variação da nota IMDB por temporada dos episódios
+
+a2 <- subset(banco, season != 'Movie')
+a2 <- subset(a2, season != 'Special')
+a2 <- subset(a2, season != 'Crossover')
+
+
+ggplot(a2) +
+  aes(x = reorder(season, imdb, FUN = median), y = imdb) +
+  geom_boxplot(fill = c("#A11D21"), width = 0.5) +
+  stat_summary(
+    fun = "mean", geom = "point", shape = 23, size = 3, fill = "white"
+  ) +
+  labs(x = "Temporada", y = "imdb") +
+  theme_estat()
+
+
