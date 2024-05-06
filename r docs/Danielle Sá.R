@@ -72,19 +72,19 @@ a2 <- subset(banco, season != 'Movie')
 a2 <- subset(a2, season != 'Special')
 a2 <- subset(a2, season != 'Crossover')
 
-
 medidas_resumo <- a2 %>%
   group_by(season) %>%
   summarise(
-    Media = mean(imdb),
-    Desvio_Padrao = sd(imdb),
     Mediana = median(imdb),
     Q1 = quantile(imdb, probs = 0.25),
     Q3 = quantile(imdb, probs = 0.75),
     Minimo = min(imdb),
-    Maximo = max(imdb)
+    Maximo = max(imdb),
+    Media = mean(imdb),
+    Desvio_Padrao = sd(imdb),
+    Variancia = var(imdb)
   ) %>%
-  ungroup() 
+  ungroup()
 
 ggplot(a2) +
   aes(x = reorder(season, imdb, FUN = median), y = imdb) +
@@ -95,6 +95,5 @@ ggplot(a2) +
   labs(x = "Temporada", y = "imdb") +
   theme_estat()
 ggsave("box_bi.pdf", width = 158, height = 93, units = "mm")
-
 
 
