@@ -86,6 +86,10 @@ medidas_resumo <- a2 %>%
   ) %>%
   ungroup()
 
+print(levels(a2$season))
+
+a2 <- a2[order(a2$season), ]
+
 ggplot(a2) +
   aes(x = reorder(season, imdb, FUN = median), y = imdb) +
   geom_boxplot(fill = c("#A11D21"), width = 0.5) +
@@ -96,4 +100,8 @@ ggplot(a2) +
   theme_estat()
 ggsave("box_bi.pdf", width = 158, height = 93, units = "mm")
 
+
+                    ###Análise 3###
+
+# Análise 3: Top 3 terrenos mais frequentes pela ativação da armadilha
 
