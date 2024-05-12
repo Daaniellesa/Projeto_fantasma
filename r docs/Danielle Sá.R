@@ -131,6 +131,16 @@ porcentagens <- str_c(top_terrenos_df$freq_relativa, "%") %>%
 
 legendas <- str_squish(str_c(top_terrenos_df$freq, " (", porcentagens, ")"))
 
+top_terrenos_df <- top_terrenos_df %>%
+  mutate(Armadilha_Funcionou = trimws(tolower(Armadilha_Funcionou)))
+
+top_terrenos_df <- top_terrenos_df %>%
+  mutate(Terreno = case_when(
+    Terreno == "Forest" ~ "Floresta",
+    Terreno == "Urban" ~ "Urbano",
+    TRUE ~ Terreno  
+  ))
+
 ggplot(top_terrenos_df) +
   aes(
     x = fct_reorder(Armadilha_Funcionou, Frequencia, .desc = TRUE), y = Frequencia,
@@ -142,5 +152,6 @@ ggplot(top_terrenos_df) +
     vjust = -0.5, hjust = 0.5,
     size = 3
   ) +
-  labs(x = "Terreno", y = "Frequência") +
+  labs(x = "Ativação da Armadilha", y = "Frequência") +
   theme_estat()
+ggsave("colunas-bi-freq.pdf", width = 158, height = 93, units = "mm")
