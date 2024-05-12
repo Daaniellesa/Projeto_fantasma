@@ -109,9 +109,38 @@ dados_limpos <- banco[banco$trap_work_first != "", ]
 
 frequencia <- table(dados_limpos$setting_terrain, dados_limpos$trap_work_first)
 frequencia
+
 frequencia_df <- as.data.frame(frequencia)
 colnames(frequencia_df) <- c("Terreno", "Armadilha_Funcionou", "Frequencia")
+
 frequencia_df <- frequencia_df[order(-frequencia_df$Frequencia), ]
+
 top_terrenos <- by(frequencia_df, frequencia_df$Armadilha_Funcionou, head, n = 3)
 print(top_terrenos)
-top_terrenos_df <- do.call(rbind, top_terrenos)
+
+topterrenos <- do.call(rbind, top_terrenos)
+
+
+top_terrenos_df <- top_terrenos_df %>%
+  mutate(
+    freq_relativa = round(Frequencia / sum(Frequencia) * 100, 1)
+  )
+
+porcentagens <- str_c(top_terrenos_df$freq_relativa, "%") %>%
+  str_replace("\\.", ",")
+
+legendas <- str_squish(str_c(top_terrenos_df$freq, " (", porcentagens, ")"))
+
+ggplot(top_terrenos_df) +
+  aes(
+    x = fct_reorder(Armadilha_Funcionou, Frequencia, .desc = TRUE), y = Frequencia,
+    fill = Terreno, label = legendas
+  ) +
+  geom_col(position = position_dodge2(preserve = "single", padding = 0)) +
+  geom_text(
+    position = position_dodge(width = 0.9),
+    vjust = -0.5, hjust = 0.5,
+    size = 3
+  ) +
+  labs(x = "Terreno", y = "Frequência") +
+  theme_estat()
