@@ -105,3 +105,12 @@ ggsave("box_bi.pdf", width = 158, height = 93, units = "mm")
 
 # Análise 3: Top 3 terrenos mais frequentes pela ativação da armadilha
 
+dados_limpos <- banco[banco$trap_work_first != "", ]
+
+frequencia <- table(dados_limpos$setting_terrain, dados_limpos$trap_work_first)
+frequencia
+frequencia_df <- as.data.frame(frequencia)
+colnames(frequencia_df) <- c("Terreno", "Armadilha_Funcionou", "Frequencia")
+frequencia_df <- frequencia_df[order(-frequencia_df$Frequencia), ]
+top_terrenos <- by(frequencia_df, frequencia_df$Armadilha_Funcionou, head, n = 3)
+print(top_terrenos)
