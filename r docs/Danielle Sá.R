@@ -1,5 +1,6 @@
 ###################Projeto Fantasma##############
 
+install.packages("tidyverse")
 library(tidyverse)
 banco <- read.csv("banco_final.csv")
 
@@ -121,7 +122,7 @@ print(top_terrenos)
 topterrenos <- do.call(rbind, top_terrenos)
 
 
-top_terrenos_df <- top_terrenos_df %>%
+top_terrenos_df <- topterrenos %>%
   mutate(
     freq_relativa = round(Frequencia / sum(Frequencia) * 100, 1)
   )
@@ -129,22 +130,25 @@ top_terrenos_df <- top_terrenos_df %>%
 porcentagens <- str_c(top_terrenos_df$freq_relativa, "%") %>%
   str_replace("\\.", ",")
 
-legendas <- str_squish(str_c(top_terrenos_df$freq, " (", porcentagens, ")"))
+legendas <- str_squish(str_c(top_terrenos_df$Frequencia, " (", porcentagens, ")"))
 
 top_terrenos_df <- top_terrenos_df %>%
-  mutate(Armadilha_Funcionou = trimws(tolower(Armadilha_Funcionou)))
+  mutate(Armadilhas = trimws(tolower(Armadilhas)))
 
 top_terrenos_df <- top_terrenos_df %>%
-  mutate(Terreno = case_when(
-    Terreno == "Forest" ~ "Floresta",
-    Terreno == "Urban" ~ "Urbano",
-    TRUE ~ Terreno  
+  mutate(Armadilhas = case_when(
+    Armadilhas == "true" ~ "Verdadeiro",
+    Armadilhas == "false" ~ "Falso",
+    TRUE ~ Armadilhas  
   ))
+
+top_terrenos_df <- top_terrenos_df %>%
+  rename(Armadilhas = Armadilha_Funcionou)
 
 ggplot(top_terrenos_df) +
   aes(
-    x = fct_reorder(Armadilha_Funcionou, Frequencia, .desc = TRUE), y = Frequencia,
-    fill = Terreno, label = legendas
+    x = fct_reorder(Terreno, Frequencia, .desc = TRUE), y = Frequencia,
+    fill = Armadilhas, label = legendas
   ) +
   geom_col(position = position_dodge2(preserve = "single", padding = 0)) +
   geom_text(
@@ -152,6 +156,10 @@ ggplot(top_terrenos_df) +
     vjust = -0.5, hjust = 0.5,
     size = 3
   ) +
-  labs(x = "Ativação da Armadilha", y = "Frequência") +
+  labs(x = "Terrenos", y = "Frequência") +
   theme_estat()
 ggsave("colunas-bi-freq.pdf", width = 158, height = 93, units = "mm")
+
+
+tabela_contingencia <- table(top_terrenos_df$Armadilhas, top_terrenos_df$Terreno)
+teste_qui_quadrado <- chisq.test(tabela_contingencia)
