@@ -163,3 +163,17 @@ ggsave("colunas-bi-freq.pdf", width = 158, height = 93, units = "mm")
 
 tabela_contingencia <- table(top_terrenos_df$Armadilhas, top_terrenos_df$Terreno)
 teste_qui_quadrado <- chisq.test(tabela_contingencia)
+
+               ### Análise 4 ###
+
+# Análise 4: Relação entre as notas IMDB e engajamento
+
+ggplot(banco) +
+  aes(x = engagement, y = imdb) +
+  geom_point(colour = "#A11D21", size = 3) +
+  labs(
+    x = "Engajamento",
+    y = "Notas IMDB"
+  ) +
+  theme_estat()
+ggsave("disp_uni.pdf", width = 158, height = 93, units = "mm")
