@@ -173,7 +173,7 @@ ggplot(banco) +
   geom_point(colour = "#A11D21", size = 3) +
   labs(
     x = "Engajamento",
-    y = "Notas IMDB"
+    y = "IMDB"
   ) +
   theme_estat()
 ggsave("disp_uni.pdf", width = 158, height = 93, units = "mm")
