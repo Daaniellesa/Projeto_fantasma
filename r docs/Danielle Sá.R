@@ -92,7 +92,7 @@ print(levels(a2$season))
 a2 <- a2[order(a2$season), ]
 
 ggplot(a2) +
-  aes(x = reorder(season, imdb, FUN = median), y = imdb) +
+  aes(x = reorder(season, imdb), y = imdb) +
   geom_boxplot(fill = c("#A11D21"), width = 0.5) +
   stat_summary(
     fun = "mean", geom = "point", shape = 23, size = 3, fill = "white"
