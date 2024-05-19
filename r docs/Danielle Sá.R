@@ -178,4 +178,5 @@ ggplot(banco) +
   theme_estat()
 ggsave("disp_uni.pdf", width = 158, height = 93, units = "mm")
 
-###
+
+cor.test(banco$imdb, banco$engagement, method = "pearson")
