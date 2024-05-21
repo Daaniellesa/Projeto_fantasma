@@ -32,7 +32,7 @@ theme_estat <- function(...) {
   )
 }
 
-                           ###Análise 1###
+                              ###Análise 1###
 
 # Análise 1:Número de lançamentos a cada década por formato de lançamento
 
@@ -64,7 +64,7 @@ ggplot(lançamentos) +
 ggsave("series_grupo.pdf", width = 158, height = 93, units = "mm")
 
 
-                 ###Análise 2###
+                               ###Análise 2###
 
 
 # Análise 2:Variação da nota IMDB por temporada dos episódios
@@ -102,7 +102,7 @@ ggplot(a2) +
 ggsave("box_bi.pdf", width = 158, height = 93, units = "mm")
 
 
-                    ###Análise 3###
+                               ###Análise 3###
 
 # Análise 3: Top 3 terrenos mais frequentes pela ativação da armadilha
 
@@ -164,7 +164,7 @@ ggsave("colunas-bi-freq.pdf", width = 158, height = 93, units = "mm")
 tabela_contingencia <- table(top_terrenos_df$Armadilhas, top_terrenos_df$Terreno)
 teste_qui_quadrado <- chisq.test(tabela_contingencia)
 
-               ### Análise 4 ###
+                              ### Análise 4 ###
 
 # Análise 4: Relação entre as notas IMDB e engajamento
 
@@ -194,17 +194,25 @@ medidas_resumo <- banco %>%
     Desvio_Padrao = sd(engagement),
     Variancia = var(engagement)
   ) %>%
-  ungroup()
+  ungro
 
 medidas_resumo <- banco %>%
-   summarise(
-     Mediana = median(imdb),
-     Q1 = quantile(imdb, probs = 0.25),
-     Q3 = quantile(imdb, probs = 0.75),
-     Minimo = min(imdb),
-     Maximo = max(imdb),
-     Media = mean(imdb),
-     Desvio_Padrao = sd(imdb),
-     Variancia = var(imdb)
-   ) %>%
-   ungroup()
+  summarise(
+    Mediana = median(idb),
+    Q1 = quantile(imdb, probs = 0.25),
+    Q3 = quantile(imdb, probs = 0.75),
+    Minimo = min(imdb),
+    Maximo = max(imdb),
+    Media = mean(imdb),
+    Desvio_Padrao = sd(imdb),
+    Variancia = var(imdb)
+  ) %>%
+  ungroup()
+
+                                ###Análise 5###
+
+#Análise 5:Variação da nota de engajamento pelo personagem que conseguiu capturar o
+#monstro
+
+
+
