@@ -168,9 +168,10 @@ teste_qui_quadrado <- chisq.test(tabela_contingencia)
 
 # Análise 4: Relação entre as notas IMDB e engajamento
 
+
 ggplot(banco) +
   aes(x = engagement, y = imdb) +
-  geom_point(colour = "#A11D21", size = 3) +
+  geom_point(colour = "#A11D21", size = 3, alpha = 0.5) +  # Adicione o parâmetro alpha aqui
   labs(
     x = "Engajamento",
     y = "IMDB"
@@ -180,3 +181,30 @@ ggsave("disp_uni.pdf", width = 158, height = 93, units = "mm")
 
 
 cor.test(banco$imdb, banco$engagement, method = "pearson")
+
+
+medidas_resumo <- banco %>%
+  summarise(
+    Mediana = median(engagement),
+    Q1 = quantile(engagement, probs = 0.25),
+    Q3 = quantile(engagement, probs = 0.75),
+    Minimo = min(engagement),
+    Maximo = max(engagement),
+    Media = mean(engagement),
+    Desvio_Padrao = sd(engagement),
+    Variancia = var(engagement)
+  ) %>%
+  ungroup()
+
+medidas_resumo <- banco %>%
+   summarise(
+     Mediana = median(imdb),
+     Q1 = quantile(imdb, probs = 0.25),
+     Q3 = quantile(imdb, probs = 0.75),
+     Minimo = min(imdb),
+     Maximo = max(imdb),
+     Media = mean(imdb),
+     Desvio_Padrao = sd(imdb),
+     Variancia = var(imdb)
+   ) %>%
+   ungroup()
