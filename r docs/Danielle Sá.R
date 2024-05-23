@@ -214,5 +214,33 @@ medidas_resumo <- banco %>%
 #Análise 5:Variação da nota de engajamento pelo personagem que conseguiu capturar o
 #monstro
 
+banco <- banco %>% 
+  filter_all(any_vars(. != ""))
+banco <- banco[complete.cases(banco), ]
+rm(df)
+scooby <- banco %>%
+  select(engagement, caught_fred, caught_daphnie, caught_velma, caught_shaggy, caught_scooby, caught_other) %>%  # Selecionar colunas específicas
+  filter(engagement > 100) 
+
+str(scooby)
+
+scooby <- scooby %>%
+   mutate(captura = ifelse(caught_fred | caught_daphnie | caught_velma | caught_shaggy | caught_scooby | caught_other, TRUE, FALSE))
+
+scooby <- scooby %>%
+  mutate_at(vars(caught_fred, caught_daphnie, caught_velma, caught_shaggy, caught_scooby, caught_other), as.logical)
+
+engajamento <- scooby %>%
+  group_by(captura) %>%
+  summarize(media_engajamento = mean(engagement, na.rm = TRUE))
 
 
+
+scooby_capturou <- scooby %>%
+  filter(caught_fred | caught_daphnie | caught_velma | caught_shaggy | caught_scooby | caught_other)
+
+ggplot(data = scooby_capturou, aes(x = "", y = engagement)) +
+  geom_boxplot(fill = "skyblue", color = "blue") +
+  labs(y = "Engajamento", title = "Engajamento dos Personagens que Capturaram o Monstro") +
+  theme_minimal() +
+  theme(axis.text.x = element_blank())
