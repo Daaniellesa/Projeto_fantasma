@@ -246,3 +246,4 @@ ggplot(banco) +
   ) +
   labs(x = "Transmissão", y = "Consumo em Cidade (milhas/galão)") +
   theme_estat()
+ggsave("box_bi.pdf", width = 158, height = 93, units = "mm")
