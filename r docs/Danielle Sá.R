@@ -214,33 +214,35 @@ medidas_resumo <- banco %>%
 #Análise 5:Variação da nota de engajamento pelo personagem que conseguiu capturar o
 #monstro
 
-banco <- banco %>% 
-  filter_all(any_vars(. != ""))
-banco <- banco[complete.cases(banco), ]
-rm(df)
-scooby <- banco %>%
-  select(engagement, caught_fred, caught_daphnie, caught_velma, caught_shaggy, caught_scooby, caught_other) %>%  # Selecionar colunas específicas
-  filter(engagement > 100) 
-
-str(scooby)
-
-scooby <- scooby %>%
-   mutate(captura = ifelse(caught_fred | caught_daphnie | caught_velma | caught_shaggy | caught_scooby | caught_other, TRUE, FALSE))
-
-scooby <- scooby %>%
-  mutate_at(vars(caught_fred, caught_daphnie, caught_velma, caught_shaggy, caught_scooby, caught_other), as.logical)
-
-engajamento <- scooby %>%
-  group_by(captura) %>%
-  summarize(media_engajamento = mean(engagement, na.rm = TRUE))
 
 
+banco <- banco %>%
+  mutate_at(vars(caught_fred, caught_daphnie, caught_velma, caught_shaggy, caught_scooby, caught_other, caught_not), as.logical)
 
-scooby_capturou <- scooby %>%
-  filter(caught_fred | caught_daphnie | caught_velma | caught_shaggy | caught_scooby | caught_other)
 
-ggplot(data = scooby_capturou, aes(x = "", y = engagement)) +
-  geom_boxplot(fill = "skyblue", color = "blue") +
-  labs(y = "Engajamento", title = "Engajamento dos Personagens que Capturaram o Monstro") +
-  theme_minimal() +
-  theme(axis.text.x = element_blank())
+banco <- banco %>%
+  mutate(Conseguiu = case_when(
+    caught_fred == TRUE ~ "Fred",
+    caught_velma == TRUE ~ "Velma",
+    caught_shaggy == TRUE ~ "Shaggy",
+    caught_daphnie == TRUE ~ "Daphnie",
+    caught_scooby == TRUE ~ "Scooby",
+    caught_other == TRUE ~ "Outro",
+    caught_not == TRUE ~ "Ninguém"
+  ))
+conseguiu
+head(conseguiu)
+
+
+
+banco <- na.omit(banco, Conseguiu)
+
+
+ggplot(banco) +
+  aes(x = reorder(Conseguiu, engagement, FUN = median), y = engagement) +
+  geom_boxplot(fill = c("#A11D21"), width = 0.5) +
+  stat_summary(
+    fun = "mean", geom = "point", shape = 23, size = 3, fill = "white"
+  ) +
+  labs(x = "Transmissão", y = "Consumo em Cidade (milhas/galão)") +
+  theme_estat()
