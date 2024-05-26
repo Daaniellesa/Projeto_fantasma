@@ -244,6 +244,6 @@ ggplot(banco) +
   stat_summary(
     fun = "mean", geom = "point", shape = 23, size = 3, fill = "white"
   ) +
-  labs(x = "Transmissão", y = "Consumo em Cidade (milhas/galão)") +
+  labs(x = "Personagens", y = "Engajamento") +
   theme_estat()
-ggsave("box_bi.pdf", width = 158, height = 93, units = "mm")
+ggsave("box_bii.pdf", width = 158, height = 93, units = "mm")
