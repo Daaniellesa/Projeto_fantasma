@@ -215,30 +215,45 @@ medidas_resumo <- banco %>%
 #monstro
 
 
+scooby <- banco %>%
+  select(caught_fred, caught_daphnie, caught_velma, caught_shaggy, caught_scooby, caught_other, engagement)
 
-banco <- banco %>%
-  mutate_at(vars(caught_fred, caught_daphnie, caught_velma, caught_shaggy, caught_scooby, caught_other, caught_not), as.logical)
 
 
-banco <- banco %>%
+scooby <- scooby %>%
+  mutate(caught_fred = ifelse(caught_fred == "True", "fred", caught_fred))
+
+scooby <- scooby %>%
+  mutate(caught_daphnie = ifelse(caught_daphnie == "True", "daphnie", caught_daphnie))
+
+scooby <- scooby %>%
+  mutate(caught_velma = ifelse(caught_velma == "True", "velma", caught_velma))
+
+scooby <- scooby %>%
+  mutate(caught_shaggy = ifelse(caught_shaggy == "True", "shaggy", caught_shaggy))
+
+scooby <- scooby %>%
+  mutate(caught_scooby = ifelse(caught_scooby == "True", "scooby", caught_scooby))
+
+scooby <- scooby %>%
+  mutate(caught_other = ifelse(caught_other == "True", "outro", caught_other))
+
+
+scooby <- scooby %>%
   mutate(Conseguiu = case_when(
-    caught_fred == TRUE ~ "Fred",
-    caught_velma == TRUE ~ "Velma",
-    caught_shaggy == TRUE ~ "Shaggy",
-    caught_daphnie == TRUE ~ "Daphnie",
-    caught_scooby == TRUE ~ "Scooby",
-    caught_other == TRUE ~ "Outro",
-    caught_not == TRUE ~ "Ninguém"
+    caught_fred == "fred" ~ "Fred",
+    caught_velma == "velma" ~ "Velma",
+    caught_shaggy == "shaggy" ~ "Shaggy",
+    caught_daphnie == "daphnie" ~ "Daphnie",
+    caught_scooby == "scooby" ~ "Scooby",
+    caught_other == "other" ~ "Outro"
   ))
-conseguiu
-head(conseguiu)
+
+scooby <- na.omit(scooby)
 
 
 
-banco <- na.omit(banco, Conseguiu)
-
-
-ggplot(banco) +
+ggplot(scooby) +
   aes(x = reorder(Conseguiu, engagement, FUN = median), y = engagement) +
   geom_boxplot(fill = c("#A11D21"), width = 0.5) +
   stat_summary(
@@ -246,4 +261,3 @@ ggplot(banco) +
   ) +
   labs(x = "Personagens", y = "Engajamento") +
   theme_estat()
-ggsave("box_bii.pdf", width = 158, height = 93, units = "mm")
