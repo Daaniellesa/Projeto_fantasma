@@ -194,11 +194,11 @@ medidas_resumo <- banco %>%
     Desvio_Padrao = sd(engagement),
     Variancia = var(engagement)
   ) %>%
-  ungro
+  ungroup()
 
 medidas_resumo <- banco %>%
   summarise(
-    Mediana = median(idb),
+    Mediana = median(imdb),
     Q1 = quantile(imdb, probs = 0.25),
     Q3 = quantile(imdb, probs = 0.75),
     Minimo = min(imdb),
@@ -218,46 +218,40 @@ medidas_resumo <- banco %>%
 scooby <- banco %>%
   select(caught_fred, caught_daphnie, caught_velma, caught_shaggy, caught_scooby, caught_other, engagement)
 
-
-
 scooby <- scooby %>%
-  mutate(caught_fred = ifelse(caught_fred == "True", "fred", caught_fred))
+  rename(outro = caught_other)
 
-scooby <- scooby %>%
-  mutate(caught_daphnie = ifelse(caught_daphnie == "True", "daphnie", caught_daphnie))
-
-scooby <- scooby %>%
-  mutate(caught_velma = ifelse(caught_velma == "True", "velma", caught_velma))
-
-scooby <- scooby %>%
-  mutate(caught_shaggy = ifelse(caught_shaggy == "True", "shaggy", caught_shaggy))
-
-scooby <- scooby %>%
-  mutate(caught_scooby = ifelse(caught_scooby == "True", "scooby", caught_scooby))
-
-scooby <- scooby %>%
-  mutate(caught_other = ifelse(caught_other == "True", "outro", caught_other))
+dados_longos <- melt(scooby, id.vars = "engagement")
 
 
-scooby <- scooby %>%
-  mutate(Conseguiu = case_when(
-    caught_fred == "fred" ~ "Fred",
-    caught_velma == "velma" ~ "Velma",
-    caught_shaggy == "shaggy" ~ "Shaggy",
-    caught_daphnie == "daphnie" ~ "Daphnie",
-    caught_scooby == "scooby" ~ "Scooby",
-    caught_other == "other" ~ "Outro"
-  ))
-
-scooby <- na.omit(scooby)
+scooby1 <- subset(dados_longos, value == "True")
 
 
-
-ggplot(scooby) +
-  aes(x = reorder(Conseguiu, engagement, FUN = median), y = engagement) +
+ggplot(scooby1) +
+  aes(x = reorder(variable, engagement, FUN = median), y = engagement) +
   geom_boxplot(fill = c("#A11D21"), width = 0.5) +
   stat_summary(
     fun = "mean", geom = "point", shape = 23, size = 3, fill = "white"
   ) +
   labs(x = "Personagens", y = "Engajamento") +
   theme_estat()
+ggsave("box_bii.pdf", width = 158, height = 93, units = "mm")
+
+
+medidas_resumo5 <- scooby1 %>%
+  group_by(variable) %>%
+  summarise(
+    Mediana = median(engagement),
+    Q1 = quantile(engagement, probs = 0.25),
+    Q3 = quantile(engagement, probs = 0.75),
+    Minimo = min(engagement),
+    Maximo = max(engagement),
+    Media = mean(engagement),
+    Desvio_Padrao = sd(engagement),
+    Variancia = var(engagement)
+  ) %>%
+  ungroup()
+
+
+
+
