@@ -91,6 +91,16 @@ print(levels(a2$season))
 
 a2 <- a2[order(a2$season), ]
 
+a2 <- a2 %>%
+  mutate(season = recode(season, `1` = "1ª"))
+a2 <- a2 %>%
+  mutate(season = recode(season, `2` = "2ª"))
+a2 <- a2 %>%
+  mutate(season = recode(season, `3` = "3ª"))
+a2 <- a2 %>%
+  mutate(season = recode(season, `4` = "4ª"))
+
+
 ggplot(a2) +
   aes(x = reorder(season, imdb), y = imdb) +
   geom_boxplot(fill = c("#A11D21"), width = 0.5) +
@@ -105,6 +115,12 @@ ggsave("box_bi.pdf", width = 158, height = 93, units = "mm")
                                ###Análise 3###
 
 # Análise 3: Top 3 terrenos mais frequentes pela ativação da armadilha
+
+banco <- banco %>%
+  mutate(trap_work_first = recode(trap_work_first, "False" = "Falso"))
+
+banco <- banco %>%
+  mutate(trap_work_first = recode(trap_work_first, "True" = "Verdadeiro"))
 
 dados_limpos <- banco[banco$trap_work_first != "", ]
 
@@ -158,7 +174,7 @@ ggplot(top_terrenos_df) +
   ) +
   labs(x = "Terrenos", y = "Frequência") +
   theme_estat()
-ggsave("colunas-bi-freq.pdf", width = 158, height = 93, units = "mm")
+ggsave("colunas-bi-freq.pdf", width = 158, height = 115, units = "mm")
 
 
 tabela_contingencia <- table(top_terrenos_df$Armadilhas, top_terrenos_df$Terreno)
@@ -171,7 +187,7 @@ teste_qui_quadrado <- chisq.test(tabela_contingencia)
 
 ggplot(banco) +
   aes(x = engagement, y = imdb) +
-  geom_point(colour = "#A11D21", size = 3, alpha = 0.5) +  # Adicione o parâmetro alpha aqui
+  geom_point(colour = "#A11D21", size = 3, alpha = 0.4) +  # Adicione o parâmetro alpha aqui
   labs(
     x = "Engajamento",
     y = "IMDB"
@@ -216,10 +232,10 @@ medidas_resumo <- banco %>%
 
 
 scooby <- banco %>%
-  select(caught_fred, caught_daphnie, caught_velma, caught_shaggy, caught_scooby, caught_other, engagement)
+  select(caught_fred, caught_daphnie, caught_velma, caught_shaggy, caught_scooby, caught_other, caught_not, engagement)
 
 scooby <- scooby %>%
-  rename(outro = caught_other)
+  rename(Ninguém = caught_not)
 
 dados_longos <- melt(scooby, id.vars = "engagement")
 
